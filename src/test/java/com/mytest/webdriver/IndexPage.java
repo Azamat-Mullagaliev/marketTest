@@ -2,6 +2,7 @@ package com.mytest.webdriver;
 
 import java.util.ArrayList;
 
+import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +11,6 @@ import org.openqa.selenium.NoSuchElementException;
 public class IndexPage {
 
     public String phoneName;
-
     public WebDriver driver;
 
     IndexPage(WebDriver your_driver){
@@ -65,33 +65,37 @@ public class IndexPage {
         return null;
     }
 
+    private Boolean noResult(){
+        try {
+            driver.findElement(By.className("n-noresult__desc"));
+            return true;
+        } catch (NoSuchElementException e1) {
+            return false;
+        }
+    }
+
     public Item search(String your_phoneName) throws InterruptedException {
 
         phoneName = your_phoneName;
         sendKeys();
 
+        if (noResult()) return null;
+
         try {
-            driver.findElement(By.className("n-noresult__desc"));
-        } catch (NoSuchElementException e1) {
-            try {
-                String foundPhone = driver.findElement(By.className("n-title__text")).getText();
-                if (foundPhone.contains(" " + phoneName + " ")||foundPhone.contains(phoneName + " ")||foundPhone.endsWith(phoneName))
-                    selectPhone();
-                else {
-                    driver.findElement(By.className("n-search-preciser__text")).findElement(By.className("link")).click();
-                    Thread.sleep(2000);
+            String foundPhone = driver.findElement(By.className("n-title__text")).getText();
+            if (foundPhone.contains(" " + phoneName + " ") || foundPhone.contains(phoneName + " ") || foundPhone.endsWith(phoneName))
+                return selectPhone();
+            else {
+                driver.findElement(By.className("n-search-preciser__text")).findElement(By.className("link")).click();
+                Thread.sleep(2000);
 
-                    ArrayList<WebElement> phones = new ArrayList<WebElement>(driver.findElements(By.className("n-snippet-card2__header")));
+                ArrayList<WebElement> phones = new ArrayList<WebElement>(driver.findElements(By.className("n-snippet-card2__header")));
 
-                    return searchFromList(phones);
-
-                }
-            } catch (NoSuchElementException e2) {
-                ArrayList<WebElement> phones = new ArrayList<WebElement>(driver.findElements(By.className("n-snippet-cell2__header")));
                 return searchFromList(phones);
             }
-
+        } catch (NoSuchElementException e2) {
+            ArrayList<WebElement> phones = new ArrayList<WebElement>(driver.findElements(By.className("n-snippet-cell2__header")));
+            return searchFromList(phones);
         }
-        return null;
     }
 }
