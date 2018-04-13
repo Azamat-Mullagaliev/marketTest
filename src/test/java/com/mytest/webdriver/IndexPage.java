@@ -26,38 +26,42 @@ public class IndexPage {
         return this;
     }
 
-    public Item selectPhone(WebDriver driver) throws InterruptedException {
-
-        Item item = new Item();
-
-        item.phoneName = phoneName;
-
+    public IndexPage sortByPrice() throws InterruptedException {
         driver.findElement(By.className("n-product-tabs__item_name_offers")).click();
         driver.findElement(By.linkText("по цене")).click();
         Thread.sleep(2000);
 
+        return this;
+    }
+
+    public Item getInfo(){
+        Item item = new Item();
+
+        item.phoneName = phoneName;
         item.shop = driver.findElement(By.className("n-snippet-card__shop")).findElement(By.className("link")).getText();
         item.price = driver.findElement(By.className("snippet-card__price")).getText();
 
         driver.findElement(By.className("snippet-card__image")).click();
 
-        Thread.sleep(20000);
-        driver.quit();
-
         item.getInfo();
+
         return item;
     }
 
-    public Item searchFromList(WebDriver driver, ArrayList<WebElement> phones) throws InterruptedException {
+    public Item selectPhone() throws InterruptedException {
+        sortByPrice();
+        return getInfo();
+    }
+
+    public Item searchFromList(ArrayList<WebElement> phones) throws InterruptedException {
         for (WebElement phone : phones)
         {
             String anotherPhone = phone.findElement(By.className("link")).getText();
             if (anotherPhone.contains(" " + phoneName + " ")||anotherPhone.contains(phoneName + " ")||anotherPhone.endsWith(phoneName)) {
                 phone.findElement(By.className("link")).click();
-                return selectPhone(driver);
+                return selectPhone();
             }
         }
-
         return null;
     }
 
@@ -72,23 +76,22 @@ public class IndexPage {
             try {
                 String foundPhone = driver.findElement(By.className("n-title__text")).getText();
                 if (foundPhone.contains(" " + phoneName + " ")||foundPhone.contains(phoneName + " ")||foundPhone.endsWith(phoneName))
-                    selectPhone(driver);
+                    selectPhone();
                 else {
                     driver.findElement(By.className("n-search-preciser__text")).findElement(By.className("link")).click();
                     Thread.sleep(2000);
 
                     ArrayList<WebElement> phones = new ArrayList<WebElement>(driver.findElements(By.className("n-snippet-card2__header")));
 
-                    return searchFromList(driver,phones);
+                    return searchFromList(phones);
 
                 }
             } catch (NoSuchElementException e2) {
                 ArrayList<WebElement> phones = new ArrayList<WebElement>(driver.findElements(By.className("n-snippet-cell2__header")));
-                return searchFromList(driver,phones);
+                return searchFromList(phones);
             }
 
         }
-
         return null;
     }
 }

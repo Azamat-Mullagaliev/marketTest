@@ -16,5 +16,8 @@ public class FirstAutomationTest {
         WebDriver driver = new ChromeDriver();
         IndexPage indexPage = new IndexPage(driver);
         Item results = indexPage.search("LG Q6");
+
+        Thread.sleep(20000);
+        driver.quit();
     }
 }
