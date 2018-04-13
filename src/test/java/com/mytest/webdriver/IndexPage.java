@@ -2,7 +2,6 @@ package com.mytest.webdriver;
 
 import java.util.ArrayList;
 
-import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
