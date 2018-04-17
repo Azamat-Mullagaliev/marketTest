@@ -2,10 +2,14 @@ package com.mytest.webdriver;
 
 import java.util.ArrayList;
 
+import org.testng.annotations.Test;
+import ru.yandex.qatools.allure.annotations.*;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.NoSuchElementException;
+
 
 public class IndexPage {
 
@@ -16,6 +20,8 @@ public class IndexPage {
         driver = your_driver;
     }
 
+    @Step("Send keys")
+    @Test
     public IndexPage sendKeys(){
         driver.get("https://market.yandex.ru/");
 
@@ -25,6 +31,8 @@ public class IndexPage {
         return this;
     }
 
+    @Step("Sort by price")
+    @Test
     public IndexPage sortByPrice() throws InterruptedException {
         driver.findElement(By.className("n-product-tabs__item_name_offers")).click();
         driver.findElement(By.linkText("по цене")).click();
@@ -33,6 +41,8 @@ public class IndexPage {
         return this;
     }
 
+    @Step("Get info about phone")
+    @Test
     public Item getInfo(){
         Item item = new Item();
 
@@ -47,11 +57,15 @@ public class IndexPage {
         return item;
     }
 
+    @Step("Select phone")
+    @Test
     public Item selectPhone() throws InterruptedException {
         sortByPrice();
         return getInfo();
     }
 
+    @Step("Search phone from list")
+    @Test
     public Item searchFromList(ArrayList<WebElement> phones) throws InterruptedException {
         for (WebElement phone : phones)
         {
@@ -73,6 +87,8 @@ public class IndexPage {
         }
     }
 
+    @Step("Search")
+    @Test
     public Item search(String your_phoneName) throws InterruptedException {
 
         phoneName = your_phoneName;
